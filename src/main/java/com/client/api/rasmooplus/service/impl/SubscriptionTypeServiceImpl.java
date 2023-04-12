@@ -13,11 +13,11 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
-public class SubscriptionTupeServiceImpl implements SubscriptionTypeService {
+public class SubscriptionTypeServiceImpl implements SubscriptionTypeService {
 
     private final SubscriptionTypeRepository subscriptionTypeRepository;
 
-    public SubscriptionTupeServiceImpl(SubscriptionTypeRepository subscriptionTypeRepository) {
+    public SubscriptionTypeServiceImpl(SubscriptionTypeRepository subscriptionTypeRepository) {
         this.subscriptionTypeRepository = subscriptionTypeRepository;
     }
 

@@ -1,11 +1,16 @@
 package com.client.api.rasmooplus.service.impl;
 
+import com.client.api.rasmooplus.dto.SubscriptionTypeDto;
+import com.client.api.rasmooplus.exception.BadRequestException;
+import com.client.api.rasmooplus.exception.NotFoundException;
 import com.client.api.rasmooplus.model.SubscriptionType;
 import com.client.api.rasmooplus.repository.SubscriptionTypeRepository;
 import com.client.api.rasmooplus.service.SubscriptionTypeService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class SubscriptionTupeServiceImpl implements SubscriptionTypeService {
@@ -23,12 +28,27 @@ public class SubscriptionTupeServiceImpl implements SubscriptionTypeService {
 
     @Override
     public SubscriptionType findById(Long id) {
-        return null;
+        Optional<SubscriptionType> optionalSubscriptionType = subscriptionTypeRepository.findById(id);
+
+        if (optionalSubscriptionType.isEmpty()) {
+            throw new NotFoundException("SubscriptionType não encontrado");
+        }
+
+        return optionalSubscriptionType.get();
     }
 
     @Override
-    public SubscriptionType create(SubscriptionType subscriptionType) {
-        return null;
+    public SubscriptionType create(SubscriptionTypeDto dto) {
+        if (Objects.nonNull(dto.getId())) {
+            throw new BadRequestException("Id deve ser Nulo");
+        }
+        return subscriptionTypeRepository.save(SubscriptionType.builder()
+                        .id(dto.getId())
+                        .name(dto.getName())
+                        .accessMonth(dto.getAccessMonth())
+                        .price(dto.getPrice())
+                        .productKey(dto.getProductKey())
+                .build());
     }
 
     @Override

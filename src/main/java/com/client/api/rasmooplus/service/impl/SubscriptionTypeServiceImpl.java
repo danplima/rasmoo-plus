@@ -3,6 +3,7 @@ package com.client.api.rasmooplus.service.impl;
 import com.client.api.rasmooplus.dto.SubscriptionTypeDto;
 import com.client.api.rasmooplus.exception.BadRequestException;
 import com.client.api.rasmooplus.exception.NotFoundException;
+import com.client.api.rasmooplus.mapper.SubscriptionTypeMapper;
 import com.client.api.rasmooplus.model.SubscriptionType;
 import com.client.api.rasmooplus.repository.SubscriptionTypeRepository;
 import com.client.api.rasmooplus.service.SubscriptionTypeService;
@@ -28,13 +29,7 @@ public class SubscriptionTypeServiceImpl implements SubscriptionTypeService {
 
     @Override
     public SubscriptionType findById(Long id) {
-        Optional<SubscriptionType> optionalSubscriptionType = subscriptionTypeRepository.findById(id);
-
-        if (optionalSubscriptionType.isEmpty()) {
-            throw new NotFoundException("SubscriptionType não encontrado");
-        }
-
-        return optionalSubscriptionType.get();
+        return getSubscriptionType(id);
     }
 
     @Override
@@ -42,22 +37,28 @@ public class SubscriptionTypeServiceImpl implements SubscriptionTypeService {
         if (Objects.nonNull(dto.getId())) {
             throw new BadRequestException("Id deve ser Nulo");
         }
-        return subscriptionTypeRepository.save(SubscriptionType.builder()
-                        .id(dto.getId())
-                        .name(dto.getName())
-                        .accessMonth(dto.getAccessMonth())
-                        .price(dto.getPrice())
-                        .productKey(dto.getProductKey())
-                .build());
+        return subscriptionTypeRepository.save(SubscriptionTypeMapper.fromDtoToEntity(dto));
     }
 
     @Override
-    public SubscriptionType update(Long id, SubscriptionType subscriptionType) {
-        return null;
+    public SubscriptionType update(Long id, SubscriptionTypeDto dto) {
+        this.getSubscriptionType(id);
+        dto.setId(id);
+        return subscriptionTypeRepository.save(SubscriptionTypeMapper.fromDtoToEntity(dto));
     }
 
     @Override
     public void delete(Long id) {
-
+        this.getSubscriptionType(id);
+        subscriptionTypeRepository.deleteById(id);
     }
+
+    private SubscriptionType getSubscriptionType(Long id) {
+        Optional<SubscriptionType> optionalSubscriptionType = subscriptionTypeRepository.findById(id);
+        if (optionalSubscriptionType.isEmpty()) {
+            throw new NotFoundException("Subscription Type não encontrado");
+        }
+        return optionalSubscriptionType.get();
+    }
+
 }

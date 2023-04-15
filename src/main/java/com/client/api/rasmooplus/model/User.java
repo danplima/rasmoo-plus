@@ -18,7 +18,7 @@ import java.time.LocalDate;
 public class User implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "users_id")
     private Long id;
 
@@ -31,7 +31,7 @@ public class User implements Serializable {
     private String cpf;
 
     @Column(name = "dt_subscription")
-    private LocalDate dtSubscription = LocalDate.now();//Evitar qualquer erro de nullpointer
+    private LocalDate dtSubscription;//Evitar qualquer erro de nullpointer
 
     @Column(name = "dt_expiration")
     private LocalDate dtExpiration;
